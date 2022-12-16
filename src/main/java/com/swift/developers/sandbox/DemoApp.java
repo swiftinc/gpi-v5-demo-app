@@ -19,17 +19,20 @@ import com.swift.developers.sandbox.util.DemoUtil;
 import com.swift.sdk.common.entity.ConnectionInfo;
 import com.swift.sdk.common.entity.ProxyParameters;
 import com.swift.sdk.common.handler.exception.SwiftException;
-import com.swift.sdk.exception.GpiException;
-import com.swift.sdk.gpitracker.v5.transactionsandcancellations.impl.GpiTrackerImpl;
-import com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil;
-import com.swift.sdk.oas.gpi.tracker.v4.model.BusinessService2Code;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.model.PaymentStatusRequest2;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.PaymentScenario7Code;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.PaymentStatusRequest3;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.model.BusinessService18Code;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.model.PaymentScenario8Code;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.model.PaymentStatusRequest7;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.model.BusinessService16Code;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.model.PaymentStatusRequest5;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.model.PaymentStatusRequest4;
+import com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.model.TransactionIndividualStatus5Code;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.GetChangedPaymentTransactionsApi;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.GetPaymentTransactionDetailsApi;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.model.*;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.TransactionCancellationStatusApi;
-import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException;
-import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiResponse;
-import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiClient;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.CancelTransactionApi;
 import com.swift.sdk.session.impl.SessionImpl;
 import com.swift.sdk.util.Util;
@@ -146,10 +149,10 @@ public class DemoApp {
         reqBody.setInvestigationExecutionStatus(InvestigationExecutionConfirmation5Code.CNCL);
         reqBody.setAssignmentIdentification("resolvedcase123");
 
-        String basePath = GpiTrackerUtil.getBasePath(configJson);
+        String basePath = com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil.getBasePath(configJson);
         byte[] signature = CreateNR(basePath,reqBody.toString());
 
-        ApiClient x = transactionCancellationStatusApi.getApiClient();
+        com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiClient x = transactionCancellationStatusApi.getApiClient();
         x.setBasePath(basePath);
         x.setAccessToken(tokenHolder.getAccessToken());
         transactionCancellationStatusApi.setApiClient(x);
@@ -162,7 +165,7 @@ public class DemoApp {
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + signature + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
-        } catch (ApiException e) {
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
     }
@@ -177,11 +180,11 @@ public class DemoApp {
          reqBody.setCaseIdentification("123");
          reqBody.setOriginalInstructionIdentification("XYZ");
          reqBody.setCancellationReasonInformation(CancellationReason8Code.DUPL);
-         String basePath = GpiTrackerUtil.getBasePath(configJson);
+         String basePath = com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil.getBasePath(configJson);
          byte[] signature = CreateNR(basePath,reqBody.toString());
 
 
-         ApiClient x = cancelTransactionApi.getApiClient();
+         com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiClient x = cancelTransactionApi.getApiClient();
          x.setBasePath(basePath);
          x.setAccessToken(tokenHolder.getAccessToken());
          cancelTransactionApi.setApiClient(x);
@@ -194,7 +197,7 @@ public class DemoApp {
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + signature + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
-        } catch (ApiException e) {
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
 
@@ -210,10 +213,10 @@ public class DemoApp {
         String next = null;
 
 
-        String basePath = GpiTrackerUtil.getBasePath(configJson);
+        String basePath = com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil.getBasePath(configJson);
 
 
-        ApiClient x = getChangedPaymentTransactionsApi.getApiClient();
+        com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiClient x = getChangedPaymentTransactionsApi.getApiClient();
         x.setBasePath(basePath);
         x.setAccessToken(tokenHolder.getAccessToken());
         getChangedPaymentTransactionsApi.setApiClient(x);
@@ -226,7 +229,7 @@ public class DemoApp {
             String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/changed/transactions?from_date_time=" + fromDateTime + "&to_date_time=" + toDateTime + "&maximum_number=" + maxNumber + "\n";
 
             System.out.println("\nREQUEST" + url + "\nRESPONSE\n " + jsonOutput);
-        } catch (ApiException e) {
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
     }
@@ -237,10 +240,10 @@ public class DemoApp {
         String uetr = "97ed4827-7b6f-4491-a06f-b548d5a7512d";
 
 
-        String basePath = GpiTrackerUtil.getBasePath(configJson);
+        String basePath = com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil.getBasePath(configJson);
 
 
-        ApiClient x = getPaymentTransactionDetailsApi.getApiClient();
+        com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiClient x = getPaymentTransactionDetailsApi.getApiClient();
         x.setBasePath(basePath);
         x.setAccessToken(tokenHolder.getAccessToken());
         getPaymentTransactionDetailsApi.setApiClient(x);
@@ -253,24 +256,174 @@ public class DemoApp {
             String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/" + uetr + "/transactions" + "\n";
 
             System.out.println("\nREQUEST" + url + "\nRESPONSE\n " + jsonOutput);
-        } catch (ApiException e) {
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
     }
 
     private static void StatusConfirmationUni() {
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.api.StatusConfirmationsApi();
+        PaymentStatusRequest4 reqBody = new PaymentStatusRequest4();
+        reqBody.setFrom("BANCUS33XXX");
+        reqBody.setInstructionIdentification("jkl000");
+        reqBody.setTransactionStatus(TransactionIndividualStatus5Code.ACCC);
+        reqBody.setTrackerInformingParty("BANABEBBXXX");
+
+        String uetr = "54ed4827-7b6f-4491-a06f-b548d5a7512d";
+
+
+        String basePath = com.swift.sdk.gpitracker.v5.status.update.universal.util.GpiTrackerUtil.getBasePath(configJson);
+
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.ApiClient x = statusConfirmationsApi.getApiClient();
+        x.setBasePath(basePath);
+        x.setAccessToken(tokenHolder.getAccessToken());
+        statusConfirmationsApi.setApiClient(x);
+        try {
+            statusConfirmationsApi.statusConfirmations(uetr,reqBody);
+
+            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-uc-cct/v5/payments/" + uetr + "/status\n";
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(reqBody);
+            String response = "\n200 OK";
+
+            System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void StatusConfirmationINST() {
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.api.StatusConfirmationsApi();
+        PaymentStatusRequest5 reqBody = new PaymentStatusRequest5();
+        reqBody.setFrom("BANCUS33XXX");
+        reqBody.setInstructionIdentification("jkl000");
+        reqBody.setTransactionStatus(com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.model.TransactionIndividualStatus5Code.ACCC);
+        reqBody.setTrackerInformingParty("BANABEBBXXX");
+        reqBody.setServiceLevel(BusinessService16Code.G005);
+        reqBody.setPaymentScenario(com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.model.PaymentScenario6Code.CCTR);
+
+        String uetr = "54ed4827-7b6f-4491-a06f-b548d5a7512d";
+
+
+        String basePath = com.swift.sdk.gpitracker.v5.status.update.inst.util.GpiTrackerUtil.getBasePath(configJson);
+
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.ApiClient x = statusConfirmationsApi.getApiClient();
+        x.setBasePath(basePath);
+        x.setAccessToken(tokenHolder.getAccessToken());
+        statusConfirmationsApi.setApiClient(x);
+        try {
+            statusConfirmationsApi.statusConfirmations(uetr,reqBody);
+
+            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcct-inst/v5/payments/" + uetr + "/status\n";
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(reqBody);
+            String response = "\n200 OK";
+
+            System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void StatusConfirmationFIT() {
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.api.StatusConfirmationsApi();
+        PaymentStatusRequest7 reqBody = new PaymentStatusRequest7();
+        reqBody.setFrom("BANCUS33XXX");
+        reqBody.setInstructionIdentification("jkl000");
+        reqBody.setTransactionStatus(com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.model.TransactionIndividualStatus5Code.ACCC);
+        reqBody.setTrackerInformingParty("BANABEBBXXX");
+        reqBody.setServiceLevel(BusinessService18Code.G004);
+        reqBody.setPaymentScenario(PaymentScenario8Code.FCTR);
+        reqBody.setEndToEndIdentification("123Ref");
+
+        String uetr = "97ed4827-7b6f-4491-a06f-b548d5a7512d";
+
+
+        String basePath = com.swift.sdk.gpitracker.v5.status.update.fit.util.GpiTrackerUtil.getBasePath(configJson);
+
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.ApiClient x = statusConfirmationsApi.getApiClient();
+        x.setBasePath(basePath);
+        x.setAccessToken(tokenHolder.getAccessToken());
+        statusConfirmationsApi.setApiClient(x);
+        try {
+            statusConfirmationsApi.statusConfirmations(uetr,reqBody);
+
+            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gfit/v5/payments/" + uetr + "/status\n";
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(reqBody);
+            String response = "\n200 OK";
+
+            System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void StatusConfirmationCOV() {
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.api.StatusConfirmationsApi();
+        PaymentStatusRequest3 reqBody = new PaymentStatusRequest3();
+        reqBody.setFrom("BANCUS33XXX");
+        reqBody.setInstructionIdentification("jkl000");
+        reqBody.setTransactionStatus(com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.TransactionIndividualStatus5Code.ACCC);
+        reqBody.setTrackerInformingParty("BANABEBBXXX");
+        reqBody.setServiceLevel(com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.BusinessService12Code.G001);
+        reqBody.setPaymentScenario(PaymentScenario7Code.COVE);
+        reqBody.setEndToEndIdentification("123Ref");
+
+        String uetr = "54ed4827-7b6f-4491-a06f-b548d5a7512d";
+
+
+        String basePath = com.swift.sdk.gpitracker.v5.status.update.cov.util.GpiTrackerUtil.getBasePath(configJson);
+
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.ApiClient x = statusConfirmationsApi.getApiClient();
+        x.setBasePath(basePath);
+        x.setAccessToken(tokenHolder.getAccessToken());
+        statusConfirmationsApi.setApiClient(x);
+        try {
+            statusConfirmationsApi.statusConfirmations(uetr,reqBody);
+
+            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcov/v5/payments/" + uetr + "/status\n";
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(reqBody);
+            String response = "\n200 OK";
+
+            System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void StatusConfirmationCCT() {
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.api.StatusConfirmationsApi();
+        PaymentStatusRequest2 reqBody = new PaymentStatusRequest2();
+        reqBody.setFrom("BANCUS33XXX");
+        reqBody.setInstructionIdentification("jkl000");
+        reqBody.setTransactionStatus(com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.model.TransactionIndividualStatus5Code.ACCC);
+        reqBody.setTrackerInformingParty("BANABEBBXXX");
+        reqBody.setServiceLevel(com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.model.BusinessService12Code.G001);
+        reqBody.setPaymentScenario(com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.model.PaymentScenario6Code.CCTR);
+
+        String uetr = "46ed4827-7b6f-4491-a06f-b548d5a7512d";
+
+
+        String basePath = com.swift.sdk.gpitracker.v5.status.update.cct.util.GpiTrackerUtil.getBasePath(configJson);
+
+        com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.ApiClient x = statusConfirmationsApi.getApiClient();
+        x.setBasePath(basePath);
+        x.setAccessToken(tokenHolder.getAccessToken());
+        statusConfirmationsApi.setApiClient(x);
+        try {
+            statusConfirmationsApi.statusConfirmations(uetr,reqBody);
+
+            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcct/v5/payments/" + uetr + "/status\n";
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonOutput = gson.toJson(reqBody);
+            String response = "\n200 OK";
+
+            System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+        } catch (com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.ApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static byte[] CreateNR(String aud, String requestBody){
