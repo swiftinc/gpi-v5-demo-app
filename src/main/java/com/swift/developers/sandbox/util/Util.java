@@ -51,7 +51,6 @@ public class Util {
                         "Proxy should be unique by combination of host and port. The list of proxies contains duplicates:"
                                 + System.lineSeparator() + Arrays.toString(proxyParameters));
             }
-			System.out.println("proxy validated");
         }
     }
     

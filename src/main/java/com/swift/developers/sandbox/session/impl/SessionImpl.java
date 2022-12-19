@@ -54,9 +54,7 @@ public class SessionImpl {
                 connInfo.getCertPassword(), connInfo.getCertAlias(), connInfo.getTrustAliasGateway(), connInfo.getGatewayHost(),
                 connInfo.getClientID(), connInfo.getClientSecret());
         oAuthCredentials.validate();
-        System.out.println("////////////OAC Validated///////////////");
         oauthToken = new OAuthSessionImpl();
-        System.out.println("////////////Session Created///////////////");
         /* Validate the proxy syntax. */
         Util.validateProxy(proxyParameters);
     }

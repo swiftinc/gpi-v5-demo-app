@@ -21,7 +21,7 @@ Unpackage the zip file and install the dependency in your local .m2 repository.
 $ install.sh
 ```
 
-### Configure runtime SDK propertise ###
+### Configure runtime SDK properties ###
 
 Update ```config/config-swift-connect.yaml``` with your application credentials, consumer-key & consumer-secret. Obtain from SWIFT Developer Portal by [creating an app](https://developer.swift.com/reference#sandbox-getting-started).
 

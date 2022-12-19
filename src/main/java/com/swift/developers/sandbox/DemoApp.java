@@ -30,6 +30,7 @@ import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.CancelT
 import org.apache.commons.lang3.StringUtils;
 import org.threeten.bp.OffsetDateTime;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -125,7 +126,7 @@ public class DemoApp {
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
 
-            System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + signature + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+            System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + new String(signature, StandardCharsets.UTF_8) + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
         } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
@@ -157,7 +158,7 @@ public class DemoApp {
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
 
-            System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + signature + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
+            System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + new String(signature, StandardCharsets.UTF_8) + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
         } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
             throw new RuntimeException(e);
         }
