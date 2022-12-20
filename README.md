@@ -21,7 +21,17 @@ Unpackage the zip file and install the dependency in your local .m2 repository.
 $ install.sh
 ```
 
-### Configure runtime SDK propertise ###
+### Install SWIFT Security SDK ###
+
+Download [SWIFT Security SDK](https://developer.swift.com/swift-sdk) from SWIFT Developer Portal, login is required for download.
+
+Unpackage the zip file and install the dependency in your local .m2 repository.
+
+```
+$ install.sh
+```
+
+### Configure runtime SDK properties ###
 
 Update ```config/config-swift-connect.yaml``` with your application credentials, consumer-key & consumer-secret. Obtain from SWIFT Developer Portal by [creating an app](https://developer.swift.com/reference#sandbox-getting-started).
 
@@ -36,12 +46,12 @@ $ mvn clean install
 ### Run ###
 
 ```
-$ java -Dlog4j.configuration=file:config/log4j.properties -jar target/gpi-v5-demo-jar-with-dependencies.jar config/config-swift-connect.yaml
+$ java -Dlog4j.configuration=file:config/log4j.properties -jar target/gpi-v5-demo-app-jar-with-dependencies.jar config/config-swift-connect.yaml
 
 ```
 To use forward proxies:
 ```
-$ java -Dlog4j.configuration=file:config/log4j.properties -jar target/gpi-v5-demo-jar-with-dependencies.jar config/config-swift-connect-fp.yaml
+$ java -Dlog4j.configuration=file:config/log4j.properties -jar target/gpi-v5-demo-app-jar-with-dependencies.jar config/config-swift-connect-fp.yaml
 
 ```
 

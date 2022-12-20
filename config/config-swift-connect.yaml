@@ -3,7 +3,7 @@
 configuration:
   hosts:
     # Http Client Timeout on Connection, Read and Write
-    call_timeout_sec: "<TIME_IN_SEC>"
+    call_timeout_sec: "10"
     #Http Swift_Signature Header name. Default should be X-SWIFT-Signature. Or Remove entry to use default
     xSwift_Signature_Header: "X-SWIFT-Signature"
     #Api Gateway setup
@@ -13,9 +13,9 @@ configuration:
       # API Gateway Public certificate Trust Alias for establishing 1-way SSL with API gateway
       trust_alias: "sandbox_pub"
       # Consumer Key generated in Swift Developer portal while registering the Application
-      consumer_key: "LD4d9LakOtFjumM4BE804UknybRBw4k6"
+      consumer_key: "<CONSUMER_KEY>"
       # Consumer Secret generated in Swift Developer portal while registering the Application
-      consumer_secret: "3X9cXXz9nk2AIRyy"
+      consumer_secret: "<CONSUMER_SECRET>"
       authorization_service:
         # Default value, do not change url parameter value
         url: "oauth2/v1/token"
