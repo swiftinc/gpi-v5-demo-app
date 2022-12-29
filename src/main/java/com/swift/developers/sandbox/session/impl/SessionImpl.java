@@ -137,8 +137,6 @@ public class SessionImpl {
                 connInfo.getCertPassword(),	connInfo.getCertAlias());
         oauthToken.init(oAuthCredentials, signHolder, OAuthTokenJWTBearer.class);
 
-        /* Api Client can be prepared only after the OAUTH Session is initialized. */
-        // prepareApiClientOAuth(oauthToken.getTokenApiClient());
 
         OAuthTokenHolder oauthTokenInfo = oauthToken.refreshToken(connInfo.getScope(), connInfo.getAudience(),
                 refreshToken);
@@ -214,30 +212,6 @@ public class SessionImpl {
         }
 
         return flag;
-    }
-
-    private void prepareApiClientOAuth(com.swift.commons.oauth.oas.ApiClient client)
-            throws SignatureContextException, ApiSessionException {
-
-        LOG.info("Preparing API Client for OAuth");
-        KeyStore keystore = KeyStoreUtils.loadKeyStore(connInfo.getCertPath(), connInfo.getCertPassword());
-        Certificate trustCertificate = Util.extractCertificate(connInfo.getTrustAliasGateway(), keystore);
-/*        String trustPEMCertificate = Util.extractPemCertificate(trustCertificate);
-        client.setSslCaCert(new ByteArrayInputStream(trustPEMCertificate.getBytes(StandardCharsets.UTF_8)));
-
-        client.setBasePath(connInfo.getGatewayHost());
-        client.setUsername(connInfo.getClientID());
-        client.setPassword(connInfo.getClientSecret());
-
-        OkHttpClient httpClient = client.getHttpClient();
-        httpClient.setRetryOnConnectionFailure(true);
-
-        if ((proxyParameters != null) && (proxyParameters.length != 0)) {
-            httpClient.setProxySelector(new HttpProxySelector());
-            ProxyAuthenticatorUtil proxyAuthenticatorUtil = new ProxyAuthenticatorUtil();
-            Authenticator auth = proxyAuthenticatorUtil.prepareProxyAuthenticator(proxyParameters);
-            httpClient.setAuthenticator(auth);
-        }*/
     }
 
     public void close() {
