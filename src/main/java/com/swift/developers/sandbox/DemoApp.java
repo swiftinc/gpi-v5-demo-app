@@ -121,7 +121,7 @@ public class DemoApp {
         try {
             transactionCancellationStatusApi.transactionCancellationStatus(reqBody, signature, uetr);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/" + uetr + "/cancellation/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/cancellation/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -153,7 +153,7 @@ public class DemoApp {
         try {
             cancelTransactionApi.cancelTransaction(reqBody, signature, uetr);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/" + uetr + "/cancellation\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/cancellation\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -188,7 +188,7 @@ public class DemoApp {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(response);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/changed/transactions?from_date_time=" + fromDateTime + "&to_date_time=" + toDateTime + "&maximum_number=" + maxNumber + "\n";
+            String url = "\nURL: " + basePath + "/payments/changed/transactions?from_date_time=" + fromDateTime + "&to_date_time=" + toDateTime + "&maximum_number=" + maxNumber + "\n";
 
             System.out.println("\nREQUEST" + url + "\nRESPONSE\n " + jsonOutput);
         } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
@@ -215,7 +215,7 @@ public class DemoApp {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(response);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-transactions-and-cancellations/v5/payments/" + uetr + "/transactions" + "\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/transactions" + "\n";
 
             System.out.println("\nREQUEST" + url + "\nRESPONSE\n " + jsonOutput);
         } catch (com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.ApiException e) {
@@ -243,7 +243,7 @@ public class DemoApp {
         try {
             statusConfirmationsApi.statusConfirmations(uetr,reqBody);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-uc-cct/v5/payments/" + uetr + "/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -276,7 +276,7 @@ public class DemoApp {
         try {
             statusConfirmationsApi.statusConfirmations(uetr,reqBody);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcct-inst/v5/payments/" + uetr + "/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -310,7 +310,7 @@ public class DemoApp {
         try {
             statusConfirmationsApi.statusConfirmations(uetr,reqBody);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gfit/v5/payments/" + uetr + "/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -344,7 +344,7 @@ public class DemoApp {
         try {
             statusConfirmationsApi.statusConfirmations(uetr,reqBody);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcov/v5/payments/" + uetr + "/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
@@ -377,7 +377,7 @@ public class DemoApp {
         try {
             statusConfirmationsApi.statusConfirmations(uetr,reqBody);
 
-            String url = "\nURL: https://sandbox.swift.com/swift-apitracker-gcct/v5/payments/" + uetr + "/status\n";
+            String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonOutput = gson.toJson(reqBody);
             String response = "\n200 OK";
