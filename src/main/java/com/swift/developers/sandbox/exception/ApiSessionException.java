@@ -1,6 +1,9 @@
 package com.swift.developers.sandbox.exception;
 
+import java.io.Serial;
+
 public class ApiSessionException extends Exception {
+    @Serial
     private static final long serialVersionUID = 1L;
     private Exception actEx = null;
 
