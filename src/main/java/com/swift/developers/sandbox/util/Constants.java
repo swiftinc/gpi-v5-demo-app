@@ -96,7 +96,7 @@ public final class Constants {
     public static final String YAML_CONFIGURATION_AUTHORIZATION_SERVICE_V2 = "authorization_service_v2";
     public static final String YAML_CONFIGURATION_GPI_CONNECTOR = "gpi_connector";
     public static final String YAML_CONFIGURATION_MGW = "microgateway";
-    public static final String YAML_CONFIGURATION_API= "api";
+    public static final String YAML_CONFIGURATION_API = "api";
     public static final String YAML_CONFIGURATION_AMQP = "amqp";
     public static final String YAML_CONFIGURATION_IMDG = "imdg";
     public static final String YAML_CONFIGURATION_SERVICES = "services";
@@ -108,7 +108,7 @@ public final class Constants {
     public static final String MGW_APPLICATION_NAME = "application_name";
     public static final String MGW_PROFILE_ID = "profile_id";
     public static final String MGW_SHARED_SECRET = "shared_secret";
-    public static final String ENABLE_ABSPATH_VALIDATION="ENABLE_ABSPATH_VALIDATION";
-    public static final String ENABLE_OKHTTP_SESSION="ENABLE_OKHTTP_SESSION";
+    public static final String ENABLE_ABSPATH_VALIDATION = "ENABLE_ABSPATH_VALIDATION";
+    public static final String ENABLE_OKHTTP_SESSION = "ENABLE_OKHTTP_SESSION";
 
 }

@@ -7,6 +7,22 @@ public class ProxyParameters {
     private String host;
     private String port;
     private String user;
+    private String password;
+
+    public ProxyParameters(String host, String port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public ProxyParameters(String host, String port, String user, String password) {
+        this(host, port);
+        this.user = user;
+        this.password = password;
+    }
+
+    public ProxyParameters() {
+        ;
+    }
 
     public String getHost() {
         return host;
@@ -38,23 +54,6 @@ public class ProxyParameters {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    private String password;
-
-    public ProxyParameters(String host, String port) {
-        this.host = host;
-        this.port = port;
-    }
-
-    public ProxyParameters(String host, String port, String user, String password) {
-        this(host, port);
-        this.user = user;
-        this.password = password;
-    }
-    
-    public ProxyParameters() {
-    	;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ConnectionInfo {
     private String mgwService;
     private String trustAliasMgw;
     private String clientAliasMgw;
-    
+
     private String username;
     private String password;
 
@@ -38,7 +38,7 @@ public class ConnectionInfo {
     private String scopeV2;
     private String audienceV2;
     private String xSwift_Signature_Header;
-    
+
     private List<com.swift.sdk.common.entity.ProxyParameters> proxyList;
     private List<com.swift.sdk.common.entity.SNLConnectionInfo> snlConnectionInfo;
     private List<com.swift.sdk.common.entity.MGWConnectionInfo> mgwConnectionInfo;
@@ -151,30 +151,30 @@ public class ConnectionInfo {
     }
 
     public String getMicrogatewayHost() {
-		return microgatewayHost;
-	}
+        return microgatewayHost;
+    }
 
-	public void setMicrogatewayHost(String microgatewayHost) {
-		this.microgatewayHost = microgatewayHost;
-	}
+    public void setMicrogatewayHost(String microgatewayHost) {
+        this.microgatewayHost = microgatewayHost;
+    }
 
-	public String getMgwService() {
-		return mgwService;
-	}
+    public String getMgwService() {
+        return mgwService;
+    }
 
-	public void setMgwService(String mgwService) {
-		this.mgwService = mgwService;
-	}
+    public void setMgwService(String mgwService) {
+        this.mgwService = mgwService;
+    }
 
-	public String getTrustAliasMgw() {
-		return trustAliasMgw;
-	}
+    public String getTrustAliasMgw() {
+        return trustAliasMgw;
+    }
 
-	public void setTrustAliasMgw(String trustAliasMgw) {
-		this.trustAliasMgw = trustAliasMgw;
-	}
+    public void setTrustAliasMgw(String trustAliasMgw) {
+        this.trustAliasMgw = trustAliasMgw;
+    }
 
-	public List<com.swift.sdk.common.entity.SNLConnectionInfo> getSnlConnectionInfo() {
+    public List<com.swift.sdk.common.entity.SNLConnectionInfo> getSnlConnectionInfo() {
         return snlConnectionInfo;
     }
 
@@ -191,22 +191,22 @@ public class ConnectionInfo {
     }
 
     public List<com.swift.sdk.common.entity.MGWConnectionInfo> getMgwConnectionInfo() {
-		return mgwConnectionInfo;
-	}
+        return mgwConnectionInfo;
+    }
 
-	public void setMgwConnectionInfo(List<com.swift.sdk.common.entity.MGWConnectionInfo> mgwConnectionInfo) {
-		this.mgwConnectionInfo = mgwConnectionInfo;
-	}
+    public void setMgwConnectionInfo(List<com.swift.sdk.common.entity.MGWConnectionInfo> mgwConnectionInfo) {
+        this.mgwConnectionInfo = mgwConnectionInfo;
+    }
 
-	public List<com.swift.sdk.common.entity.ProxyParameters> getProxyList() {
-		return proxyList;
-	}
+    public List<com.swift.sdk.common.entity.ProxyParameters> getProxyList() {
+        return proxyList;
+    }
 
-	public void setProxyList(List<com.swift.sdk.common.entity.ProxyParameters> proxyList) {
-		this.proxyList = proxyList;
-	}
+    public void setProxyList(List<com.swift.sdk.common.entity.ProxyParameters> proxyList) {
+        this.proxyList = proxyList;
+    }
 
-	public String getUsername() {
+    public String getUsername() {
         return username;
     }
 

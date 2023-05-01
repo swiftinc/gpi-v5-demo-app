@@ -65,29 +65,29 @@ configuration:
         configuration_apikey: "<VALUE>"
         # monitoring apikey
         monitoring_apikey: "<VALUE>"
-#      # AMQP connection properties
-#      amqp:
-#        # AMQP Connection URL to e.g. SWIFT Microgateway instance
-#        connection_url: "amqps://<host>:<port>?<connection_options>"
-#        # JMS Queue name to send Outbound API Call via AMQP
-#        outbound_jms_queue: ""
-#        # JMS Queue name to receive Inbound API Call via AMQP
-#        inbound_jms_queue: ""
-#        # ISO20022 validation
-#        iso20022_validate: ""
-#        # Timeout to wait for response, milliseconds
-#        response_timeout_millisec: ""
-#      imdg:
-#        # Hazelcast Connection URL
-#        hazelcast_instance_address: "<host>:<port>"
-#        # Hazelcast Request Queue name
-#        hazelcast_request_queue: ""
-#        # Hazelcast Response Queue name
-#        hazelcast_response_queue: ""
-#        # ISO20022 validation
-#        hazelcast_iso20022_validate: ""
-#        # Timeout to wait for response, milliseconds
-#        hazelcast_response_timeout_millisec: ""
+  #      # AMQP connection properties
+  #      amqp:
+  #        # AMQP Connection URL to e.g. SWIFT Microgateway instance
+  #        connection_url: "amqps://<host>:<port>?<connection_options>"
+  #        # JMS Queue name to send Outbound API Call via AMQP
+  #        outbound_jms_queue: ""
+  #        # JMS Queue name to receive Inbound API Call via AMQP
+  #        inbound_jms_queue: ""
+  #        # ISO20022 validation
+  #        iso20022_validate: ""
+  #        # Timeout to wait for response, milliseconds
+  #        response_timeout_millisec: ""
+  #      imdg:
+  #        # Hazelcast Connection URL
+  #        hazelcast_instance_address: "<host>:<port>"
+  #        # Hazelcast Request Queue name
+  #        hazelcast_request_queue: ""
+  #        # Hazelcast Response Queue name
+  #        hazelcast_response_queue: ""
+  #        # ISO20022 validation
+  #        hazelcast_iso20022_validate: ""
+  #        # Timeout to wait for response, milliseconds
+  #        hazelcast_response_timeout_millisec: ""
   #    forward_proxies:
   #          # Forward proxy hostname
   #        - hostname: "<hostname_1>"

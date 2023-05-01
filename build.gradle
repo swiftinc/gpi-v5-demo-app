@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version "$shadowVersion"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+group 'com.swift.developers.sandbox'
+version '1.0-SNAPSHOT'
+
+ext {
+    javaMainClass = 'com.swift.developers.sandbox.DemoApp'
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:latest.release'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:latest.release'
+    implementation "com.swift.commons.oauth:swift-security-sdk:$swiftSecuritySdkVersion"
+    implementation "com.swift.sdk:swift-sdk:$swiftSdkVersion"
+    implementation 'commons-lang:commons-lang:latest.release'
+}
+
+jar {
+    dependsOn shadowJar
+    archiveBaseName = 'gpi-v5-demo-app'
+    manifest {
+        attributes(
+                "Main-Class": javaMainClass
+        )
+    }
+}
+
+tasks.build {
+    dependsOn shadowJar
+}
+
+tasks.register('runWithExec', JavaExec) {
+    dependsOn shadowJar
+    group = "Execution"
+    description = "Run the output executable jar with JavaExecTask"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = javaMainClass
+    standardInput = System.in
+    systemProperty "log4j.configuration", "file:config/log4j.properties"
+    args "config/config-swift-connect.yaml"
+}

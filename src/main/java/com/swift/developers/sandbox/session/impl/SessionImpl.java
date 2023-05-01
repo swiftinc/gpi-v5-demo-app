@@ -1,9 +1,5 @@
 package com.swift.developers.sandbox.session.impl;
 
-import com.swift.developers.sandbox.exception.ApiSessionException;
-import com.swift.developers.sandbox.util.ConnectionInfo;
-import com.swift.developers.sandbox.util.ProxyParameters;
-import com.swift.developers.sandbox.util.Util;
 import com.swift.commons.api.APISecurityHSM;
 import com.swift.commons.context.HSMContext;
 import com.swift.commons.exceptions.NRSignatureException;
@@ -21,15 +17,15 @@ import com.swift.commons.oauth.exceptions.OAuthValidationException;
 import com.swift.commons.oauth.token.OAuthTokenHolder;
 import com.swift.commons.oauth.token.OAuthTokenJWTBearer;
 import com.swift.commons.oauth.token.OAuthTokenUnsecuredJWTBearer;
-import com.swift.commons.utils.KeyStoreUtils;
-
+import com.swift.developers.sandbox.exception.ApiSessionException;
+import com.swift.developers.sandbox.util.ConnectionInfo;
+import com.swift.developers.sandbox.util.ProxyParameters;
+import com.swift.developers.sandbox.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +40,7 @@ public class SessionImpl {
     private Util.CertType certType;
 
     public SessionImpl(ConnectionInfo info, ProxyParameters[] proxy, Util.CertType type) throws OAuthValidationException,
-            ApiSessionException, SignatureContextException
-    {
+            ApiSessionException, SignatureContextException {
         connInfo = info;
         proxyParameters = proxy;
         /* Certificate type - HSM or Channel. */
@@ -63,10 +58,9 @@ public class SessionImpl {
             throws OAuthValidationException, OAuthConnectionException, OAuthFailResponseException, OAuthSessionException,
             ApiSessionException, SignatureContextException, SignatureGenerationException {
 
-    	if (certType == Util.CertType.HARD) {
+        if (certType == Util.CertType.HARD) {
             return getAccessTokenHolderHSM();
-        }
-        else {
+        } else {
             return getAccessTokenHolderChannelCert();
         }
     }
@@ -76,13 +70,13 @@ public class SessionImpl {
             ApiSessionException, SignatureContextException, SignatureGenerationException {
 
         /* Update fail over logic for SAG slots if needed. */
-    	/* Uses first slot (slot 0) by default for now. */
+        /* Uses first slot (slot 0) by default for now. */
         LOG.info("Trying to connect to the SAG at {} slot.", 0);
         com.swift.sdk.common.entity.SNLConnectionInfo snlConInfo = connInfo.getSnlConnectionInfo().get(0);
         PhysicalCertificateHolder sslHolder = new PhysicalCertificateHolder(snlConInfo.getTrustStoragePath(),
                 snlConInfo.getTrustStoragePass(), snlConInfo.getTrustStorageAlias());
 
-        SignHolder signHolder = new SNLInfoHolder(snlConInfo.getHostname(), new Integer(snlConInfo.getPort()),
+        SignHolder signHolder = new SNLInfoHolder(snlConInfo.getHostname(), Integer.parseInt(snlConInfo.getPort()),
                 snlConInfo.getSslDN(), sslHolder, snlConInfo.getUserDN(), snlConInfo.getMessagePartner(),
                 snlConInfo.getLauKey());
         try {
@@ -120,7 +114,7 @@ public class SessionImpl {
         oauthToken.init(oAuthCredentials, signHolder, OAuthTokenJWTBearer.class);
 
         /* Api Client can be prepared only after the OAUTH Session is initialized. */
-       // prepareApiClientOAuth(oauthToken.getTokenApiClient());
+        // prepareApiClientOAuth(oauthToken.getTokenApiClient());
 
         OAuthTokenHolder oauthTokenInfo = oauthToken.getToken(connInfo.getScope(), connInfo.getAudience());
         LOG.debug("Received OAuth token: {}", oauthTokenInfo);
@@ -134,7 +128,7 @@ public class SessionImpl {
 
         LOG.info("Start refreshing OAuth token.");
         SignHolder signHolder = new PhysicalCertificateHolder(connInfo.getCertPath(),
-                connInfo.getCertPassword(),	connInfo.getCertAlias());
+                connInfo.getCertPassword(), connInfo.getCertAlias());
         oauthToken.init(oAuthCredentials, signHolder, OAuthTokenJWTBearer.class);
 
 
@@ -153,7 +147,7 @@ public class SessionImpl {
         com.swift.sdk.common.entity.SNLConnectionInfo snlHolder = connInfo.getSnlConnectionInfo().get(0);
         HSMContext context = new HSMContext(snlHolder.getUserDN(), snlHolder.getTrustStoragePath(),
                 snlHolder.getTrustStoragePass(), snlHolder.getTrustStorageAlias(), snlHolder.getSslDN(),
-                snlHolder.getHostname(), new Integer(snlHolder.getPort()), snlHolder.getMessagePartner(),
+                snlHolder.getHostname(), Integer.parseInt(snlHolder.getPort()), snlHolder.getMessagePartner(),
                 snlHolder.getLauKey());
         APISecurityHSM apiSecurityHSM = new APISecurityHSM(context);
         try {
@@ -181,7 +175,7 @@ public class SessionImpl {
         oauthToken.init(oAuthCredentials, signHolder, OAuthTokenJWTBearer.class);
 
         com.swift.commons.oauth.oas.ApiClient client = oauthToken.getRevokeTokenApiClient();
-      //  prepareApiClientOAuth(client);
+        //  prepareApiClientOAuth(client);
         String revokeResp = oauthToken.revokeToken(oauthTokenInfo);
         if ((revokeResp != null) && !revokeResp.isEmpty()) {
             flag = true;
@@ -203,7 +197,7 @@ public class SessionImpl {
         oauthToken.init(oAuthCredentials, signHolder, OAuthTokenJWTBearer.class);
 
         com.swift.commons.oauth.oas.ApiClient client = oauthToken.getRevokeTokenApiClient();
-     //   prepareApiClientOAuth(client);
+        //   prepareApiClientOAuth(client);
 
         String revokeResp = oauthToken.revokeToken(accessToken, OAuthTokenHolder.ACCESS_TOKEN_TYPE);
         if ((revokeResp != null) && !revokeResp.isEmpty()) {
@@ -227,9 +221,9 @@ public class SessionImpl {
             List<Proxy> proxies = new ArrayList<>();
             for (ProxyParameters proxyParameter : proxyParameters) {
                 String proxyHost = proxyParameter.getHost();
-                String proxyPort = proxyParameter.getPort();              
+                String proxyPort = proxyParameter.getPort();
 
-                if (!Util.isNullOrEmpty(proxyHost)) {
+                if (Util.isNotNullOrEmpty(proxyHost)) {
                     InetSocketAddress proxyInet = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
                     Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyInet);
                     proxies.add(proxy);
