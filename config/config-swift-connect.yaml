@@ -13,9 +13,9 @@ configuration:
       # API Gateway Public certificate Trust Alias for establishing 1-way SSL with API gateway
       trust_alias: "sandbox_pub"
       # Consumer Key generated in Swift Developer portal while registering the Application
-      consumer_key: "<CONSUMER_KEY>"
+      consumer_key: "R4Z8fUzP1uGqNyD0YLZ07o49uaAxxEy2"
       # Consumer Secret generated in Swift Developer portal while registering the Application
-      consumer_secret: "<CONSUMER_SECRET>"
+      consumer_secret: "F4LJWRgpoqGVj7cL"
       authorization_service:
         # Default value, do not change url parameter value
         url: "oauth2/v1/token"

@@ -1,4 +1,4 @@
-package com.swift.developers.sandbox;
+package com.swift.developers.sandbox.cli;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,9 +9,9 @@ import com.swift.commons.exceptions.SignatureContextException;
 import com.swift.commons.token.ChannelToken;
 import com.swift.commons.token.Token;
 import com.swift.developers.sandbox.exception.ApiSessionException;
-import com.swift.developers.sandbox.session.impl.SandboxApiSession;
-import com.swift.developers.sandbox.util.ConnectionInfo;
-import com.swift.developers.sandbox.util.Util;
+import com.swift.developers.sandbox.session.SandboxApiSession;
+import com.swift.developers.sandbox.util.SwiftSdkUtil;
+import com.swift.sdk.common.entity.ConnectionInfo;
 import com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.model.PaymentStatusRequest2;
 import com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.PaymentScenario7Code;
 import com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.model.PaymentStatusRequest3;
@@ -27,57 +27,82 @@ import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.GetChan
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.GetPaymentTransactionDetailsApi;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.api.TransactionCancellationStatusApi;
 import com.swift.sdk.oas.gpi.tracker.v5.transactionsandcancellations.model.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
+import picocli.CommandLine.Command;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 
-public class DemoApp {
+@Component
+@RequiredArgsConstructor
+@Command(
+        name = "gpi v5 APIs",
+        mixinStandardHelpOptions = true,
+        version = "1.0.0",
+        description = """
+                A simple Java client application consuming gpi v5 APIs using SWIFT SDK.
+                """
+)
+public class SandboxApiCommand implements Callable<Integer> {
 
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Usage : DemoApp <Configuration File Name>");
-            System.exit(-1);
-        } else {
-            System.out.println("Using the configuration file - " + args[0] + " to setup the session.");
-        }
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    @Value("${swift.connect.config:}")
+    private String configFileName;
+
+    @Override
+    public Integer call() {
+        System.out.println("Using the configuration file - " + configFileName + " to setup the session.");
 
         SandboxApiSession sess;
+        Scanner scan = null;
 
         try {
-            sess = new SandboxApiSession(args[0], Util.CertType.SOFT);
+            sess = new SandboxApiSession(configFileName, SwiftSdkUtil.CertType.SOFT);
             System.out.println("\nSession is established successfully.");
+
             displaySessionDetails(sess);
 
-            try (Scanner scan = new Scanner(System.in)) {
-                String userInput;
+            scan = new Scanner(System.in);
+            String userInput;
 
-                do {
-                    displayApiSelectionMenu();
-                    userInput = scan.nextLine().trim();
+            do {
+                displayApiSelectionMenu();
+                userInput = scan.nextLine().trim();
 
-                    if (!userInput.isEmpty() && isNumeric(userInput)) {
-                        int apiChoice = Integer.parseInt(userInput);
-                        callSelectedApi(apiChoice, sess);
-                    }
-                } while (!userInput.equalsIgnoreCase("bye"));
-            }
+                if (!userInput.isEmpty() && isNumeric(userInput)) {
+                    int apiChoice = Integer.parseInt(userInput);
+                    callSelectedApi(apiChoice, sess);
+                }
+
+            } while (!userInput.equalsIgnoreCase("bye"));
         } catch (ApiSessionException ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
+        } finally {
+            if (scan != null) {
+                scan.close();
+            }
         }
+
+        // Return an exit code (0 for success, non-zero for errors)
+        return 0;
     }
 
-    private static void displaySessionDetails(SandboxApiSession sess) {
+    private void displaySessionDetails(SandboxApiSession sess) {
         System.out.println("Access Token - " + sess.getAccessToken());
         System.out.println("Access Token Expiry - " + sess.getTokenExpiry());
         System.out.println("Refresh Token - " + sess.getRefreshToken());
         System.out.println("Refresh Token Expiry - " + sess.getRefreshExpiry() + "\n");
     }
 
-    private static void displayApiSelectionMenu() {
+    private void displayApiSelectionMenu() {
         System.out.print("""
                 \n--------------Select the API you would like to call-------------------
                 1 - CCT StatusConfirmation
@@ -94,11 +119,11 @@ public class DemoApp {
                 """);
     }
 
-    private static boolean isNumeric(String input) {
+    private boolean isNumeric(String input) {
         return input.chars().allMatch(Character::isDigit);
     }
 
-    private static void callSelectedApi(int apiChoice, SandboxApiSession sess) {
+    private void callSelectedApi(int apiChoice, SandboxApiSession sess) {
         switch (apiChoice) {
             case 1 -> StatusConfirmationCCT(sess);
             case 2 -> StatusConfirmationCOV(sess);
@@ -113,9 +138,10 @@ public class DemoApp {
         }
     }
 
-    private static void TransactionCancellationStatus(SandboxApiSession sess) {
+    private void TransactionCancellationStatus(SandboxApiSession sess) {
         TransactionCancellationStatusApi transactionCancellationStatusApi = new TransactionCancellationStatusApi();
         TransactionCancellationStatusRequest2 reqBody = new TransactionCancellationStatusRequest2();
+
         String uetr = "97ed4827-7b6f-4491-a06f-b548d5a7512d";
 
         reqBody.setFrom("BANBUS33XXX");
@@ -135,8 +161,8 @@ public class DemoApp {
             transactionCancellationStatusApi.transactionCancellationStatus(reqBody, signature, uetr);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/cancellation/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + new String(signature, StandardCharsets.UTF_8) + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -145,9 +171,10 @@ public class DemoApp {
         }
     }
 
-    private static void CancelTransaction(SandboxApiSession sess) {
+    private void CancelTransaction(SandboxApiSession sess) {
         CancelTransactionApi cancelTransactionApi = new CancelTransactionApi();
         CancelTransactionRequest2 reqBody = new CancelTransactionRequest2();
+
         String uetr = "422bc102-f141-5b3c-991f-d65b7c27ed85";
 
         reqBody.setFrom("BANABEBBXXX");
@@ -166,8 +193,8 @@ public class DemoApp {
             cancelTransactionApi.cancelTransaction(reqBody, signature, uetr);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/cancellation\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nHeader Parameters:\n" + "X-SWIFT-Signature: " + new String(signature, StandardCharsets.UTF_8) + "\n" + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -176,7 +203,7 @@ public class DemoApp {
         }
     }
 
-    private static void getChangedPaymentTransaction(SandboxApiSession sess) {
+    private void getChangedPaymentTransaction(SandboxApiSession sess) {
         GetChangedPaymentTransactionsApi getChangedPaymentTransactionsApi = new GetChangedPaymentTransactionsApi();
 
         OffsetDateTime fromDateTime = OffsetDateTime.parse("2020-04-11T00:00:00.0Z");
@@ -195,8 +222,7 @@ public class DemoApp {
         try {
             ReadChangedPaymentTransactionsResponse1 response = getChangedPaymentTransactionsApi.getChangedPaymentTransactions(fromDateTime, toDateTime, maxNumber, paymentScenario, next);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(response);
+            String jsonOutput = GSON.toJson(response);
 
             String url = "\nURL: " + basePath + "/payments/changed/transactions?from_date_time=" + fromDateTime + "&to_date_time=" + toDateTime + "&maximum_number=" + maxNumber + "\n";
 
@@ -206,11 +232,10 @@ public class DemoApp {
         }
     }
 
-    private static void getPaymentTransactionDetails(SandboxApiSession sess) {
+    private void getPaymentTransactionDetails(SandboxApiSession sess) {
         GetPaymentTransactionDetailsApi getPaymentTransactionDetailsApi = new GetPaymentTransactionDetailsApi();
 
         String uetr = "97ed4827-7b6f-4491-a06f-b548d5a7512d";
-
 
         String basePath = com.swift.sdk.gpitracker.v5.transactionsandcancellations.util.GpiTrackerUtil.getBasePath(sess.getConfigJson());
 
@@ -221,8 +246,7 @@ public class DemoApp {
         try {
             ReadPaymentTransactionDetailsResponse1 response = getPaymentTransactionDetailsApi.getPaymentTransactionDetails(uetr);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(response);
+            String jsonOutput = GSON.toJson(response);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/transactions" + "\n";
 
@@ -232,7 +256,7 @@ public class DemoApp {
         }
     }
 
-    private static void StatusConfirmationUni(SandboxApiSession sess) {
+    private void StatusConfirmationUni(SandboxApiSession sess) {
         com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.universal.api.StatusConfirmationsApi();
         PaymentStatusRequest4 reqBody = new PaymentStatusRequest4();
         reqBody.setFrom("BANCUS33XXX");
@@ -252,8 +276,8 @@ public class DemoApp {
             statusConfirmationsApi.statusConfirmations(uetr, reqBody);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -262,7 +286,7 @@ public class DemoApp {
         }
     }
 
-    private static void StatusConfirmationINST(SandboxApiSession sess) {
+    private void StatusConfirmationINST(SandboxApiSession sess) {
         com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.inst.api.StatusConfirmationsApi();
         PaymentStatusRequest5 reqBody = new PaymentStatusRequest5();
         reqBody.setFrom("BANCUS33XXX");
@@ -284,8 +308,8 @@ public class DemoApp {
             statusConfirmationsApi.statusConfirmations(uetr, reqBody);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -294,7 +318,7 @@ public class DemoApp {
         }
     }
 
-    private static void StatusConfirmationFIT(SandboxApiSession sess) {
+    private void StatusConfirmationFIT(SandboxApiSession sess) {
         com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.fit.api.StatusConfirmationsApi();
         PaymentStatusRequest7 reqBody = new PaymentStatusRequest7();
         reqBody.setFrom("BANCUS33XXX");
@@ -317,8 +341,8 @@ public class DemoApp {
             statusConfirmationsApi.statusConfirmations(uetr, reqBody);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -327,7 +351,7 @@ public class DemoApp {
         }
     }
 
-    private static void StatusConfirmationCOV(SandboxApiSession sess) {
+    private void StatusConfirmationCOV(SandboxApiSession sess) {
         com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.cov.api.StatusConfirmationsApi();
         PaymentStatusRequest3 reqBody = new PaymentStatusRequest3();
         reqBody.setFrom("BANCUS33XXX");
@@ -350,8 +374,8 @@ public class DemoApp {
             statusConfirmationsApi.statusConfirmations(uetr, reqBody);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -360,7 +384,7 @@ public class DemoApp {
         }
     }
 
-    private static void StatusConfirmationCCT(SandboxApiSession sess) {
+    private void StatusConfirmationCCT(SandboxApiSession sess) {
         com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.api.StatusConfirmationsApi statusConfirmationsApi = new com.swift.sdk.oas.gpi.tracker.v5.status.update.cct.api.StatusConfirmationsApi();
         PaymentStatusRequest2 reqBody = new PaymentStatusRequest2();
         reqBody.setFrom("BANCUS33XXX");
@@ -382,8 +406,8 @@ public class DemoApp {
             statusConfirmationsApi.statusConfirmations(uetr, reqBody);
 
             String url = "\nURL: " + basePath + "/payments/" + uetr + "/status\n";
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonOutput = gson.toJson(reqBody);
+
+            String jsonOutput = GSON.toJson(reqBody);
             String response = "\n200 OK";
 
             System.out.println("\nREQUEST" + url + "\nBody:\n" + jsonOutput + "\n" + "\nRESPONSE" + response);
@@ -392,17 +416,18 @@ public class DemoApp {
         }
     }
 
-    private static byte[] CreateNR(String aud, String requestBody, SandboxApiSession sess) {
+    private byte[] CreateNR(String aud, String requestBody, SandboxApiSession sess) {
         Map<String, String> claimsMap = new HashMap<>();
         claimsMap.put("audience", aud);
         String json = new GsonBuilder().disableHtmlEscaping().create().toJson(requestBody);
         claimsMap.put("payload", json);
-        ConnectionInfo connInfo = sess.getConnInfo();
+
+        ConnectionInfo connection = sess.getConnection();
 
         try {
             Token token = new ChannelToken();
-            Context context = new KeyStoreContext(connInfo.getCertPath(), connInfo.getCertPassword(),
-                    connInfo.getCertPassword(), connInfo.getCertAlias());
+            Context context = new KeyStoreContext(connection.getCertPath(), connection.getCertPassword(),
+                    connection.getCertPassword(), connection.getCertAlias());
             String nrSignature = token.createNRSignature(context, claimsMap);
             return nrSignature.getBytes();
         } catch (SignatureContextException | NRSignatureException e) {

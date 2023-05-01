@@ -1,56 +1,46 @@
 plugins {
+    id "org.springframework.boot" version "$springBootVersion"
+    id "io.spring.dependency-management" version "$springDependencyManagerVersion"
+    id "com.google.cloud.tools.jib" version "$jibPluginVersion"
+    id 'idea'
     id 'java'
-    id 'com.github.johnrengelman.shadow' version "$shadowVersion"
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
 }
 
 group 'com.swift.developers.sandbox'
-version '1.0-SNAPSHOT'
+version = '0.0.1'
+sourceCompatibility = JavaVersion.VERSION_17
 
-ext {
-    javaMainClass = 'com.swift.developers.sandbox.DemoApp'
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://repo.spring.io/release") }
     flatDir {
-        dirs 'libs'
+        dir rootProject.file('libs')
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
     }
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.fasterxml.jackson.core:jackson-databind:latest.release'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:latest.release'
     implementation "com.swift.commons.oauth:swift-security-sdk:$swiftSecuritySdkVersion"
     implementation "com.swift.sdk:swift-sdk:$swiftSdkVersion"
     implementation 'commons-lang:commons-lang:latest.release'
-}
-
-jar {
-    dependsOn shadowJar
-    archiveBaseName = 'gpi-v5-demo-app'
-    manifest {
-        attributes(
-                "Main-Class": javaMainClass
-        )
-    }
-}
-
-tasks.build {
-    dependsOn shadowJar
-}
-
-tasks.register('runWithExec', JavaExec) {
-    dependsOn shadowJar
-    group = "Execution"
-    description = "Run the output executable jar with JavaExecTask"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = javaMainClass
-    standardInput = System.in
-    systemProperty "log4j.configuration", "file:config/log4j.properties"
-    args "config/config-swift-connect.yaml"
+    implementation "info.picocli:picocli:$picocliVersion"
+    implementation "info.picocli:picocli-spring-boot-starter:$picocliVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: gpi-v5-demo-app
+
+swift:
+  connect:
+    config: config/config-swift-connect.yaml

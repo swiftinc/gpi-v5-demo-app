@@ -1,4 +1,4 @@
-# SWIFT gpi API demo application in Java
+# SWIFT gpi API demo application in Java (SpringBoot and Picocli)
 
 Make calls to SWIFT APIs is easy using SWIFT SDK. All you need to do is add the SWIFT SDKs as dependency when building
 your Java application through Maven or Gradle.
@@ -11,7 +11,7 @@ the [API Sandbox](https://developer.swift.com/reference#gsg).
 ### Prerequisites ###
 
 * Java 17 and above
-* maven 3.5.* and above
+* Gradle 8.* and above
 
 ### Install SWIFT SDK ###
 
@@ -47,12 +47,6 @@ To use forward proxies update ```config/config-swift-connect-fp.yaml``` with you
 consumer-key & consumer-secret and forward proxy information. Obtain from SWIFT Developer Portal
 by [creating an app](https://developer.swift.com/reference#sandbox-getting-started).
 
-### RunExecutable ###
-
-```bash
-./gradlew clean runWithExec
-```
-
 ### Build ###
 
 ```bash
@@ -62,17 +56,15 @@ by [creating an app](https://developer.swift.com/reference#sandbox-getting-start
 ### Run ###
 
 ```bash
-java -Dlog4j.configuration=file:config/log4j.properties \
-      -jar build/libs/gpi-v5-demo-app-1.0-SNAPSHOT-all.jar \
-      config/config-swift-connect.yaml
+java -Dswift.connect.config=config/config-swift-connect.yaml \
+      -jar build/libs/gpi-v5-demo-app-0.0.1.jar
 ```
 
 To use forward proxies:
 
 ```bash
-java -Dlog4j.configuration=file:config/log4j.properties \
-      -jar build/libs/gpi-v5-demo-app-1.0-SNAPSHOT-all.jar \
-      config/config-swift-connect-fp.yaml
+java -Dswift.connect.config=config/config-swift-connect-fp.yaml \
+      -jar build/libs/gpi-v5-demo-app-0.0.1.jar
 ```
 
 ## Keystore
