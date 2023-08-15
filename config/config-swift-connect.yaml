@@ -33,16 +33,16 @@ configuration:
         # Example 3, swift.apitracker swift.preval
         # Example 4, swift.apitracker/FullViewer swift.preval/access_to_service
         scope: "swift.apitracker/FullViewer"
-      authorization_service_v2:
-        # Default value, do not change url parameter value
-        url: "oauth2/v2/token"
-        # Replace audience parameter to api-test.swiftnet.sipn.swift.com/oauth2/v2/token when using pilot environment
-        audience: "sandbox.swift.com/oauth2/v2/token"
-        # OAuth token session scope.
-        # Client Applications can request API Gateway OAuth scope and this is mandatory.
-        # Example 1, urn:notification:provider:internal
-        # Example 2, urn:swiftref:internal
-        scope: "urn:notification:provider:internal"
+ #     authorization_service_v2:
+ #       # Default value, do not change url parameter value
+ #       url: "oauth2/v2/token"
+ #       # Replace audience parameter to api-test.swiftnet.sipn.swift.com/oauth2/v2/token when using pilot environment
+ #       audience: "sandbox.swift.com/oauth2/v2/token"
+ #       # OAuth token session scope.
+ #       # Client Applications can request API Gateway OAuth scope and this is mandatory.
+ #       # Example 1, urn:notification:provider:internal
+ #       # Example 2, urn:swiftref:internal
+ #       scope: "urn:notification:provider:internal"
     gpi_connector:
       # Your gpi Connector hostname and port. For example, "https://bewx2768:9000".
       host: "https://<domain_name>:<port>"
@@ -88,19 +88,19 @@ configuration:
 #        hazelcast_iso20022_validate: ""
 #        # Timeout to wait for response, milliseconds
 #        hazelcast_response_timeout_millisec: ""
-  #    forward_proxies:
-  #          # Forward proxy hostname
-  #        - hostname: "<hostname_1>"
-  #          # Forward proxy port
-  #          port: "<port_1>"
-  #          # Forward proxy user used to connect
-  #          username: "<user_1>"
-  #          # Forward proxy password
-  #          password: "<password_1>"
-  #        - hostname: "<host_2>" # Only use when you are using multiple forward proxies
-  #          port: "<port_2>"
-  #          username: "<user_2>"
-  #          password: "<password_2>"
+#    forward_proxies:
+#          # Forward proxy hostname
+#        - hostname: "<hostname_1>"
+#          # Forward proxy port
+#          port: "<port_1>"
+#          # Forward proxy user used to connect
+#          username: "<user_1>"
+#          # Forward proxy password
+#          password: "<password_1>"
+#        - hostname: "<host_2>" # Only use when you are using multiple forward proxies
+#          port: "<port_2>"
+#          username: "<user_2>"
+#          password: "<password_2>"
   services:
     # absPath of gpi Tracker API service version 2. Replace it with /swift-apitracker-pilot/v2”  for Test and Training environment.
     tracker_service_v2: "/swift-apitracker/v2"
@@ -152,8 +152,28 @@ configuration:
     tracker_service_v5_status_confirm_inst: "/swift-apitracker-gcct-inst/v5"
     # absPath of gpi Tracker service version 5 for universal. Replace it with “/swift-apitracker-uc-cct-pilot/v5” for Test and Training environment.
     tracker_service_v5_status_confirm_universal: "/swift-apitracker-uc-cct/v5"
+    # absPath of gpi PMI Payment Status service version 5. Replace it with “/swift-apitracker-pmi-pilot/v5” for Test and Training environment.
+    tracker_pmi_service_v5: "/swift-apitracker-pmi/v5"
+    # absPath of gpi Stop and Recall Payment Service version 6. Replace it with “/swift-apitracker-gsrp-pilot/v6” for Test and Training environment.
+    tracker_stop_and_recall_payment_service_v6: "/swift-apitracker-gsrp/v6"
     # absPath of GCASE service version 5. Replace it with “/swift-apitracker-gcase-pilot/v5” for Test and Training environment.
     gcase_service_v5: "/swift-apitracker-gcase/v5"
+    # absPath of GCASE service version 6. Replace it with “/swift-apitracker-gcase-pilot/v6” for Test and Training environment.
+    gcase_service_v6: "/swift-apitracker-gcase/v6"
+    # absPath of Securities Settlement View API service version 1. Replace it with “/swift-securities-view-pilot/v1” for Test and Training environment.
+    securities_view_service_v1: "/swift-securities-view/v1"
+    # absPath of mgw 2.0.x microservices monitoring APi
+    monitoring_service_v20: "mgw-monitoring-api/1.0.0"
+    # absPath of mgw 2.0.x microservices management APi
+    management_service_v20: "mgw-management-api/1.0.4"
+    # absPath of mgw 2.0.x microservices configuration APi
+    configuration_service_v20: "/mgw-configuration-api/2.0.0"
+    # absPath of mgw 1.0.x microservices monitoring APi
+    monitoring_service_v10: "mgw-monitoring-api/1.0.0"
+    # absPath of mgw 1.0.x microservices management APi
+    management_service_v10: "/mgw-management-api/1.0.3"
+    # absPath of mgw 1.0.x microservices configuration APi
+    configuration_service_v10: "/mgw-configuration-api/1.0.4"
   security_footprints:
     common:
       # Location of the java key store file. Common java key store file for software certificate and SAG SSL certificate.
