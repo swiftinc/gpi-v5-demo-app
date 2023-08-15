@@ -31,6 +31,18 @@ Unpackage the zip file and install the dependency in your local .m2 repository.
 $ install.sh
 ```
 
+### Update Dependencies ###
+
+In cases where the SDK version in the pom.xml file do not match the ones available on SWIFT Developer Portal, please run the following command. The versions plugin will update your pom file with the latest available in your local repository.
+
+```
+$ mvn versions:user-latest-versions -Dincludes=com.swift.commons.oauth:swift-security-sdk
+```
+
+```
+$ mvn versions:user-latest-versions -Dincludes=com.swift.apisdk:swift-sdk-swagger
+```
+
 ### Configure runtime SDK properties ###
 
 Update ```config/config-swift-connect.yaml``` with your application credentials, consumer-key & consumer-secret. Obtain from SWIFT Developer Portal by [creating an app](https://developer.swift.com/reference#sandbox-getting-started).
