@@ -35,12 +35,14 @@ $ install.sh
 
 In cases where the SDK version in the pom.xml file do not match the ones available on SWIFT Developer Portal, please run the following command. The versions plugin will update your pom file with the latest available in your local repository.
 
+After installing the SDK packages, navigate to where you have cloned this project and execute these in the same directory as the pom.xml file.
+
 ```
-$ mvn versions:user-latest-versions -Dincludes=com.swift.commons.oauth:swift-security-sdk
+$ mvn versions:use-latest-versions -Dincludes=com.swift.commons.oauth:swift-security-sdk
 ```
 
 ```
-$ mvn versions:user-latest-versions -Dincludes=com.swift.apisdk:swift-sdk-swagger
+$ mvn versions:use-latest-versions -Dincludes=com.swift.apisdk:swift-sdk-swagger
 ```
 
 ### Configure runtime SDK properties ###
